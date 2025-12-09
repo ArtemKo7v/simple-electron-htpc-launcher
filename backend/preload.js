@@ -1,14 +1,39 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { app, contextBridge, ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
+// Check if app is packaged to .exe
+const isPackaged = app.isPackaged;
+
 function readConfigFile() {
+    const exeDir = path.dirname(process.execPath);
+    const bundledDir = __dirname;
+
+    const candidates = isPackaged ? [
+        path.join(exeDir, 'config', 'config.json'),
+        path.join(exeDir, 'config.json'),
+    ] : [
+        path.join(bundledDir, '..', 'config', 'config.json'),
+    ];
+
+    for (const p of candidates) {
+        if (fs.existsSync(p)) {
+            const cfg = tryReadJson(p);
+            if (cfg) {
+                return cfg;
+            }
+        }
+    }
+    console.warn('No readable config found');
+    return null;
+}
+
+function tryReadJson(filePath) {
     try {
-        const cfgPath = path.join(__dirname, 'config', 'default.json');
-        const txt = fs.readFileSync(cfgPath, 'utf8');
+        const txt = fs.readFileSync(filePath, 'utf8');
         return JSON.parse(txt);
     } catch (e) {
-        console.error('readConfigFile error', e);
+        console.error('tryReadJson error', e);
         return null;
     }
 }
