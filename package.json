@@ -4,15 +4,48 @@
   "description": "Simple HTPC media launcher (Electron).",
   "main": "backend/main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder --win"
   },
   "devDependencies": {
-    "electron": "^26.0.0"
+    "electron": "^26.0.0",
+    "electron-builder": "^26.0.12"
   },
   "build": {
+    "appId": "com.artemko7v.mediaplayer",
+    "productName": "MediaLauncher",
+    "files": [
+      "**/*"
+    ],
     "extraResources": [
-      { "from":"config/", "to":"config/", "filter":["**/*"] },
-      { "from":"images/", "to":"images/", "filter":["**/*"] }
-    ]
+      {
+        "from": "config/",
+        "to": "config/",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "images/",
+        "to": "images/",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }
