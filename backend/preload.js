@@ -2,8 +2,49 @@ const { app, contextBridge, ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-// Check if app is packaged to .exe
-const isPackaged = app.isPackaged;
+// Detect if app is packaged
+function detectPackagedFallback() {
+    try {
+        // 1) process.defaultApp true => dev
+        if (process.defaultApp) return false;
+
+        // 2) asar in path => packaged
+        if (typeof __dirname === 'string' && __dirname.includes('.asar')) return true;
+
+        // 3) execPath contains 'electron' => dev, otherwise packaged
+        const exe = path.basename(process.execPath || '').toLowerCase();
+        if (exe.includes('electron')) return false;
+
+        // 4) resourcesPath heuristic (packaged apps usually have resources != cwd)
+        try {
+            if (process.resourcesPath && process.resourcesPath !== process.cwd()) {
+                // if resourcesPath ends with 'app.asar' or 'resources' — likely packaged
+                if (process.resourcesPath.includes('app.asar') || process.resourcesPath.toLowerCase().includes('\\resources')) {
+                    return true;
+                }
+            }
+        } catch (e) { }
+
+        // default to packaged (safer)
+        return true;
+    } catch (e) {
+        return true;
+    }
+}
+
+let isPackaged = detectPackagedFallback();
+
+// best-effort try to get app.isPackaged if available (may be undefined)
+try {
+    const electron = require('electron');
+    // electron.app may be undefined in preload; also check remote if enabled
+    const app = electron.app || (electron.remote && electron.remote.app);
+    if (app && typeof app.isPackaged === 'boolean') {
+        isPackaged = app.isPackaged;
+    }
+} catch (e) {
+    // ignore, we'll use fallback
+}
 
 function readConfigFile() {
     const exeDir = path.dirname(process.execPath);
