@@ -8,5 +8,11 @@
   },
   "devDependencies": {
     "electron": "^26.0.0"
+  },
+  "build": {
+    "extraResources": [
+      { "from":"config/", "to":"config/", "filter":["**/*"] },
+      { "from":"images/", "to":"images/", "filter":["**/*"] }
+    ]
   }
 }

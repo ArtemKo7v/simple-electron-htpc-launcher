@@ -9,7 +9,8 @@
     "menu": {
         "main": {
             "label": "Main Menu",
-            "background": "#121212",
+            "backgroundColor": "#121212",
+            "backgroundImage": "backgrounds/005.jpg",
             "buttons": [
                 {
                     "id": "calc",
@@ -33,7 +34,6 @@
         },
         "system": {
             "label": "System Menu",
-            "background": "#121212",
             "buttons": [
                 {
                     "id": "sleep",
