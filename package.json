@@ -1,0 +1,12 @@
+{
+  "name": "electron-media-launcher",
+  "version": "0.1.0",
+  "description": "Simple HTPC media launcher (Electron).",
+  "main": "backend/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^26.0.0"
+  }
+}

@@ -1,0 +1,67 @@
+:root {
+  --bg: #0f0f12;
+  --panel: #121216;
+  --accent: #2a7ae2;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --tile-size: 256px;
+}
+
+body.dark {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Roboto, Arial, sans-serif;
+}
+
+#header {
+  font-size: 24px; 
+  color: var(--text);
+}
+
+#clock {
+  font-weight: 600;
+}
+
+#buttons-area{
+  min-height: 300px;
+}
+
+.tile{
+  width: var(--tile-size);
+  height: var(--tile-size);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.25));
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.tile .label {
+  position: absolute;
+  bottom: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.webview-header {
+  padding: 8px;
+  background: var(--panel);
+}
+
+#webviewModal {
+  position: fixed;
+  inset: 2% 6%;
+  background: var(--panel);
+  border-radius: 8px;
+  z-index: 999;
+  padding: 8px;
+}
+
+.hidden {
+  display: none;
+}
