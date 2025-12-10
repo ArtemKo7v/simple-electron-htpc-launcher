@@ -11,6 +11,8 @@ body.dark {
   background: var(--bg);
   color: var(--text);
   font-family: Roboto, Arial, sans-serif;
+  height: 100%;
+  overflow: hidden;
 }
 
 #header {
@@ -24,6 +26,13 @@ body.dark {
 
 #buttons-area{
   min-height: 300px;
+  background-color: #1212127a;
+  margin-left: -24px;
+  margin-right: -24px;
+  padding: 24px;
+  display: flex;
+  margin-top: 10%;
+  justify-content: center;
 }
 
 .tile{
@@ -55,9 +64,9 @@ body.dark {
 
 #webviewModal {
   position: fixed;
-  inset: 2% 6%;
+  inset: 0% 0%;
   background: var(--panel);
-  border-radius: 8px;
+  border-radius: 0px;
   z-index: 999;
   padding: 8px;
 }

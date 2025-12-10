@@ -26,8 +26,8 @@
         ]
       },
       {
-        "from": "images/",
-        "to": "images/",
+        "from": "assets/",
+        "to": "assets/",
         "filter": [
           "**/*"
         ]
@@ -47,5 +47,9 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     }
+  },
+  "dependencies": {
+    "native-sound-mixer": "^3.4.6-win",
+    "node-addon-api": "^8.5.0"
   }
 }

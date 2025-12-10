@@ -1,4 +1,5 @@
-const { app, contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -46,15 +47,16 @@ try {
     // ignore, we'll use fallback
 }
 
-function readConfigFile() {
+function readConfigFile(name) {
     const exeDir = path.dirname(process.execPath);
     const bundledDir = __dirname;
-
+    const filename = `${name}.json` || 'config.json';
     const candidates = isPackaged ? [
-        path.join(exeDir, 'config', 'config.json'),
-        path.join(exeDir, 'config.json'),
+
+        path.join(exeDir, 'config', filename),
+        path.join(exeDir, filename),
     ] : [
-        path.join(bundledDir, '..', 'config', 'config.json'),
+        path.join(bundledDir, '..', 'config', filename),
     ];
 
     for (const p of candidates) {
@@ -67,6 +69,14 @@ function readConfigFile() {
     }
     console.warn('No readable config found');
     return null;
+}
+
+function readConfig() {
+    return readConfigFile('config');
+}
+
+function readThemeConfig(themeName) {
+    return readConfigFile(`theme-${themeName}`);
 }
 
 function tryReadJson(filePath) {
@@ -84,6 +94,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
     openUrl: (u) => ipcRenderer.invoke('open-url', u),
     systemAction: (action, options) => ipcRenderer.invoke('system-action', action, options),
     onVolumeChange: (cb) => ipcRenderer.on('volume-change', (e, delta) => cb(delta)),
-    onVolumeMute: (cb) => ipcRenderer.on('volume-mute', () => cb()),
-    readConfig: () => readConfigFile()
+    onVolumeMute: (cb) => ipcRenderer.on('volume-mute', () => cb()),    
+    readConfig: () => readConfig(),
+    loadTheme: (themeName) => readThemeConfig(themeName)
+});
+
+contextBridge.exposeInMainWorld('audioAPI', {
+    mute: (isMute) => ipcRenderer.invoke('audio:mute', isMute),
+    volumeUp: (delta) => ipcRenderer.invoke('audio:volumeUp', delta),
+    volumeDown: (delta) => ipcRenderer.invoke('audio:volumeDown', delta)
 });

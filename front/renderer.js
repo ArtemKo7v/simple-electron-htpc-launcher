@@ -6,7 +6,7 @@ const defaultConfig = {
     "menu": {
         "main": {
             "label": "Main Menu",
-            "background": "#121212",
+            "backgroundColor": "#121212",
             "buttons": [
                 { "id": "calc", "label": "Calculator" },
                 { "id": "youtube", "label": "YouTube" },
@@ -15,7 +15,7 @@ const defaultConfig = {
         },
         "system": {
             "label": "System Menu",
-            "background": "#121212",
+            "backgroundColor": "#121212",
             "buttons": [
                 { "id": "sleep", "label": "Sleep" },
                 { "id": "restart", "label": "Restart" },
@@ -41,9 +41,35 @@ function loadConfig() {
     });
 }
 
+function loadTheme(themeName) {
+    const defaultTheme = {};
+    return new Promise((resolve) => {
+        try {
+            const themeCfg = window.electronAPI.loadTheme(themeName);
+            if (themeCfg) return resolve(themeCfg);
+            return resolve(defaultTheme);
+        } catch (e) {
+            console.error('loadTheme error', e);
+            resolve(defaultTheme);
+        }
+    });
+}
+
 function applyTheme(t) {
     if (t.background) {
         document.body.style.background = t.background;
+    }
+    if (t.backgroundColor) {
+        document.body.style.backgroundColor = t.backgroundColor;
+    }
+    if (t.backgroundImage) {
+        document.body.style.backgroundImage = `url(../${t.backgroundImage})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'top-center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+    }
+    if (t.textColor) {
+        document.body.style.color = t.textColor;
     }
     if (t.clockPosition === 'left') {
         document.getElementById('header').classList.add('justify-content-start');
@@ -80,17 +106,12 @@ function onButtonClick(b) {
         $('#webviewModal').removeClass('d-none');
     } else if (b.type === 'submenu') {
         // render submenu buttons replacing main buttons area (store a history)
-        const prev = cfg;
-        cfg = {
-            display: cfg.display,
-            buttonSize: cfg.buttonSize,
-            buttons: b.buttons,
-            theme: cfg.theme
-        };
+        const prev = currentMenu;
+        currentMenu = b.submenu;
         renderButtons();
         // add back button
         const back = $('<button class="btn btn-sm btn-secondary mt-2">Back</button>');
-        back.on('click', () => { cfg = prev; renderButtons(); });
+        back.on('click', () => { currentMenu = prev; renderButtons(); });
         $('#buttons-area').append(back);
     } else if (b.type === 'system') {
         // call system action
@@ -106,13 +127,20 @@ function startClock() {
     }, 500);
 }
 
+let isMuted = false;
+
 // Startup
 $(function () {
     loadConfig().then(c => {
         cfg = Object.assign({}, defaultConfig, c);
-        applyTheme(c.theme || {});
-        renderButtons();
-        startClock();
+        console.log('Loaded config:', cfg);
+        loadTheme(cfg.theme).then(t => {
+            Object.assign(cfg, t);
+            console.log('Applied theme:', t);
+            applyTheme(t);
+            renderButtons();
+            startClock();
+        });
     });
 
     $('#webview-close').on('click', () => {
@@ -120,12 +148,23 @@ $(function () {
         $('#webviewModal').addClass('d-none');
     });
 
-    // volume control from main
-    window.electronAPI.onVolumeChange((delta) => {
-        // Try adjust <audio> elements or use system mixer via native modules; here we emit a custom event for pages
-        $(document).trigger('volume-adjust', [delta]);
+    // Volume control
+    window.electronAPI.onVolumeChange(async (delta) => {
+        console.log('Volume change requested:', delta);
+        let res = null;
+        if (delta > 0) {
+            res = await window.audioAPI.volumeUp(delta / 100);           
+        } else {
+            res = await window.audioAPI.volumeDown(-delta / 100);
+        }
+        console.log('Volume change result:', res);
     });
-    window.electronAPI.onVolumeMute(() => {
-        $(document).trigger('volume-mute');
+
+    // Mute toggle
+    window.electronAPI.onVolumeMute(async () => {
+        isMuted = !isMuted;
+        console.log('Volume mute requested');
+        const res = await window.audioAPI.mute(isMuted);
+        console.log('Muted:', res);
     });
 });

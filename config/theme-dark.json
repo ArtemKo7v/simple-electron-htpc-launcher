@@ -1,0 +1,14 @@
+{
+    "themeName": "dark",
+    "themeDescription": "Dark theme",
+    "backgroundColor": "#121212",
+    "textColor": "#FFFFFF",
+    "buttonSize": 256,
+    "backgroundImage": "assets/backgrounds/001.jpg",
+    "clock": {
+        "fontSize": 64,
+        "fontColor": "#FFFFFF",
+        "fontFamily": "Arial",
+        "showSeconds": false
+    }
+}
