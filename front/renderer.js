@@ -55,15 +55,52 @@ function loadTheme(themeName) {
     });
 }
 
+let bgVideoEl = null;
+
+function setupVideoBackground(src) {
+    if (!src) return;
+
+    if (!bgVideoEl) {
+        bgVideoEl = document.createElement('video');
+        bgVideoEl.id = 'bg-video';
+        bgVideoEl.autoplay = true;
+        bgVideoEl.loop = true;
+        bgVideoEl.muted = true;
+        bgVideoEl.playsInline = true;
+
+        Object.assign(bgVideoEl.style, {
+            position: 'fixed',
+            inset: '0',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center',
+            zIndex: '-1',
+            pointerEvents: 'none'
+        });
+
+        document.body.prepend(bgVideoEl);
+    }
+
+    bgVideoEl.src = src;
+    bgVideoEl.play().catch(() => {});
+}
+
 function applyTheme(t) {
+    if (t.backgroundVideo) {
+      
+        setupVideoBackground(`../themes/${cfg.theme}/backgrounds/${t.backgroundVideo}`);
+    }
+    /*
     if (t.background) {
         document.body.style.background = t.background;
     }
+    */
     if (t.backgroundColor) {
         document.body.style.backgroundColor = t.backgroundColor;
     }
     if (t.backgroundImage) {
-        document.body.style.backgroundImage = `url(../themes/${cfg.theme}/${t.backgroundImage})`;
+        document.body.style.backgroundImage = `url(../themes/${cfg.theme}/backgrounds/${t.backgroundImage})`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'top-center';
         document.body.style.backgroundRepeat = 'no-repeat';

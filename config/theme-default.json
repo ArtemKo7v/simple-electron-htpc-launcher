@@ -4,7 +4,8 @@
     "backgroundColor": "#121212",
     "textColor": "#FFFFFF",
     "buttonSize": 256,
-    "backgroundImage": "backgrounds/001.jpg",
+    "_backgroundVideo": "001.mp4",
+    "backgroundImage": "001.jpg",
     "clock": {
         "fontSize": 64,
         "fontColor": "#FFFFFF",
