@@ -4,8 +4,7 @@
         "show": true
     },
     "buttonSize": 256,
-    "display": "tiles",
-    "buttonStyle": "avatar",
+    "buttonStyle": "fisheye",
     "menu": {
         "main": {
             "label": "Main Menu",
@@ -54,6 +53,7 @@
                     "id": "shutdown",
                     "label": "Shutdown",
                     "type": "system",
+                    "image": "icons/default/system.png",
                     "action": "shutdown"
                 },
                 {

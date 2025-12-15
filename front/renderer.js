@@ -122,30 +122,40 @@ function renderButtons() {
 
     const menu = cfg.menu[currentMenu];
 
-    const style = cfg.buttonStyle || 'tile';
+    const style = menu.buttonStyle || cfg.buttonStyle || 'tiles';
+
+    area.removeClass('tiles fisheye').addClass(style);
 
     menu.buttons.forEach(b => {
-        let btn;
-  
-        if (style === 'avatar') {
-            btn = $(`<div class="avatar-wrap">
-                       <div class="avatar"></div>
-                       <div class="avatar-label">${b.label}</div>
-                     </div>`);
+        let btnWrapper, btn, label;
 
-            if (b.image) {
-                btn.find('.avatar').css('background-image', `url(../themes/${cfg.theme}/${b.image})`);
-            }
-            btn.find('.avatar').on('click', () => onButtonClick(b));
-        } else {
-            btn = $(`<div class="tile btn btn-light d-flex flex-column
-                       justify-content-center align-items-center m-2"
-                       style="width:${cfg.buttonSize}px;height:${cfg.buttonSize}px;">
-                       <span class="tile-label">${b.label}</span>
-                     </div>`);
-            btn.on('click', () => onButtonClick(b));
+        // Wrapper
+        btnWrapper = $(`<div>`);
+        btnWrapper.addClass("button-wrapper");
+
+        // Button
+        btn = $('<div class="button"></div>');
+        btn.on('click', () => onButtonClick(b));
+
+        if (b.image) {
+            btn.css('background-image', `url(../themes/${cfg.theme}/${b.image})`);
         }
-        area.append(btn);
+        btnWrapper.append(btn);
+
+        // Label
+        label = $(`<div class="label">${b.label}</div>`);
+        btnWrapper.append(label);
+
+        // Tilestyle adjustments
+        if (style === 'tile') {
+            btn.addClass('btn btn-light d-flex flex-column justify-content-center align-items-center m-2');
+            if (cfg.buttonSize) {
+                btn.css({ width: `${cfg.buttonSize}px`, height: `${cfg.buttonSize}px` });
+            }
+        }
+
+        area.append(btnWrapper);
+
     });
 }
 

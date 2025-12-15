@@ -47,16 +47,15 @@ try {
     // ignore, we'll use fallback
 }
 
-function readConfigFile(name) {
+function readConfigFile(name, configDir = null) {
     const exeDir = path.dirname(process.execPath);
     const bundledDir = __dirname;
     const filename = `${name}.json` || 'config.json';
     const candidates = isPackaged ? [
-
-        path.join(exeDir, 'config', filename),
+        path.join(exeDir, configDir || 'config', filename),
         path.join(exeDir, filename),
     ] : [
-        path.join(bundledDir, '..', 'config', filename),
+        path.join(bundledDir, '..', configDir || 'config', filename),
     ];
 
     for (const p of candidates) {
@@ -76,7 +75,7 @@ function readConfig() {
 }
 
 function readThemeConfig(themeName) {
-    return readConfigFile(`theme-${themeName}`);
+    return readConfigFile('theme', path.join('themes', themeName));
 }
 
 function tryReadJson(filePath) {
