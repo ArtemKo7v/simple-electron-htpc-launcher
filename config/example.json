@@ -1,11 +1,11 @@
 {
-    "theme": "dark",
+    "theme": "default",
     "clock": {
         "show": true
     },
     "buttonSize": 256,
     "display": "tiles",
-
+    "buttonStyle": "avatar",
     "menu": {
         "main": {
             "label": "Main Menu",
@@ -16,17 +16,20 @@
                     "id": "calc",
                     "label": "Calculator",
                     "type": "exe",
+                    "image": "icons/default/calc.png",
                     "exe": "C:\\\\Windows\\\\System32\\\\calc.exe"
                 },
                 {
                     "id": "youtube",
                     "label": "YouTube",
                     "type": "webview",
+                    "image": "icons/default/youtube.png",
                     "url": "https://www.youtube.com"
                 },
                 {
                     "id": "system",
                     "label": "System",
+                    "image": "icons/default/system.png",
                     "type": "submenu",
                     "submenu": "system"
                 }

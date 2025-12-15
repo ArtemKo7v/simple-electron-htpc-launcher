@@ -26,8 +26,8 @@
         ]
       },
       {
-        "from": "assets/",
-        "to": "assets/",
+        "from": "themes/",
+        "to": "themes/",
         "filter": [
           "**/*"
         ]

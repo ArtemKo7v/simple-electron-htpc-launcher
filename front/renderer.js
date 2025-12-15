@@ -1,6 +1,6 @@
 // Renderer: loads config, renders tiles or carousel, handles actions.
 const defaultConfig = {
-    "theme": "dark",
+    "theme": "default",
     "buttonSize": 256,
     "display": "tiles",
     "menu": {
@@ -63,7 +63,7 @@ function applyTheme(t) {
         document.body.style.backgroundColor = t.backgroundColor;
     }
     if (t.backgroundImage) {
-        document.body.style.backgroundImage = `url(../${t.backgroundImage})`;
+        document.body.style.backgroundImage = `url(../themes/${cfg.theme}/${t.backgroundImage})`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'top-center';
         document.body.style.backgroundRepeat = 'no-repeat';
@@ -78,23 +78,38 @@ function applyTheme(t) {
 }
 
 let currentMenu = 'main';
+
 function renderButtons() {
     const area = $('#buttons-area');
     area.empty();
 
-    console.log(cfg);
-
     const menu = cfg.menu[currentMenu];
-    if (cfg.display === 'tiles') {
-        // todo
-        menu.buttons.forEach(b => {
-            const btn = $(`<div class="tile btn btn-light d-flex flex-column justify-content-center align-items-center m-2" style="width:${cfg.buttonSize}px; height:${cfg.buttonSize}px;"><span class="tile-label">${b.label}</span></div>`);
-            btn.on('click', () => { onButtonClick(b); });
-            area.append(btn);
-        });
-    } else if (cfg.display === 'carousel') {
-        // todo
-    }
+
+    const style = cfg.buttonStyle || 'tile';
+
+    menu.buttons.forEach(b => {
+        let btn;
+  
+        if (style === 'avatar') {
+            btn = $(`<div class="avatar-wrap">
+                       <div class="avatar"></div>
+                       <div class="avatar-label">${b.label}</div>
+                     </div>`);
+
+            if (b.image) {
+                btn.find('.avatar').css('background-image', `url(../themes/${cfg.theme}/${b.image})`);
+            }
+            btn.find('.avatar').on('click', () => onButtonClick(b));
+        } else {
+            btn = $(`<div class="tile btn btn-light d-flex flex-column
+                       justify-content-center align-items-center m-2"
+                       style="width:${cfg.buttonSize}px;height:${cfg.buttonSize}px;">
+                       <span class="tile-label">${b.label}</span>
+                     </div>`);
+            btn.on('click', () => onButtonClick(b));
+        }
+        area.append(btn);
+    });
 }
 
 function onButtonClick(b) {
