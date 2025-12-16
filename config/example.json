@@ -36,29 +36,33 @@
         },
         "system": {
             "label": "System Menu",
+            "buttonStyle": "tiles",
             "buttons": [
                 {
                     "id": "sleep",
                     "label": "Sleep",
                     "type": "system",
+                    "image": "icons/system/sleep.png",
                     "action": "sleep"
                 },
                 {
                     "id": "restart",
                     "label": "Restart",
                     "type": "system",
+                    "image": "icons/system/reboot.png",
                     "action": "restart"
                 },
                 {
                     "id": "shutdown",
                     "label": "Shutdown",
                     "type": "system",
-                    "image": "icons/default/system.png",
+                    "image": "icons/system/shutdown.png",
                     "action": "shutdown"
                 },
                 {
                     "id": "exit",
                     "label": "Exit",
+                    "image": "icons/system/exit.png",
                     "type": "system",
                     "action": "exit"
                 }
